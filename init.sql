@@ -1,6 +1,6 @@
 -- Каркас схемы БД init.sql
 --
--- Расширение для использования BIGNINT в exclusion
+-- Расширение для использования BIGINT в exclusion
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 -- -----------------------------------------
@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 -- -----------------------------------------
 CREATE TABLE "user" (
     user_id       BIGSERIAL PRIMARY KEY,
-    email         TEXT      NOT NULL UNIQUE CHECK (position('@' in email) > 1),,
+    email         TEXT      NOT NULL UNIQUE CHECK (position('@' in email) > 1),
     name          TEXT      NOT NULL,
     password_hash TEXT      NOT NULL,
     role          TEXT      NOT NULL
@@ -23,7 +23,7 @@ CREATE TABLE coworking (
     address      TEXT      NOT NULL,
     opens_at     TIME      NOT NULL,
     closes_at    TIME      NOT NULL,
-    manager_id   BIGNINT   NOT NULL REFERENCES "user"(user_id) ON DELETE RESTRICT,
+    manager_id   BIGINT   NOT NULL REFERENCES "user"(user_id) ON DELETE RESTRICT,
 
     CHECK (closes_at > opens_at)
 );
@@ -49,11 +49,14 @@ CREATE TABLE workspace (
 CREATE TABLE booking(
     booking_id   BIGSERIAL  PRIMARY KEY,
     workspace_id BIGINT     NOT NULL REFERENCES workspace(workspace_id) ON DELETE RESTRICT,
-    user_id      BIGINT     NOT NULL REFERENCES user(user_id) ON DELETE RESTRICT,
-    start_time   TIMESTAMPZ NOT NULL,
-    end_time     TIMESTAMPZ NOT NULL,
+    user_id      BIGINT     NOT NULL REFERENCES "user"(user_id) ON DELETE RESTRICT,
+    start_time   TIMESTAMPTZ 
+ NOT NULL,
+    end_time     TIMESTAMPTZ 
+ NOT NULL,
     status       TEXT       NOT NULL DEFAULT 'pending',
-    created_at   TIMESTAMPZ DEFAULT now(),
+    created_at   TIMESTAMPTZ 
+ DEFAULT now(),
 
     CHECK (end_time > start_time)
 );
@@ -66,6 +69,7 @@ CREATE TABLE payment (
     booking_id  BIGINT         NOT NULL REFERENCES booking(booking_id) ON DELETE RESTRICT,
     amount      NUMERIC(10, 2) NOT NULL CHECK (amount >= 0),
     status      TEXT           NOT NULL DEFAULT 'pending',
-    paid_at     TIMESTAMPZ,
-    refunded_at TIMESTAMPZ,
+    paid_at     TIMESTAMPTZ 
+,
+    refunded_at TIMESTAMPTZ 
 );

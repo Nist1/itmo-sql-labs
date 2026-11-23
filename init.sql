@@ -1,7 +1,4 @@
 -- Каркас схемы БД init.sql
---
--- Расширение для использования BIGINT в exclusion
-CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 -- -----------------------------------------
 -- Пользователи
@@ -41,35 +38,4 @@ CREATE TABLE workspace (
     is_active      BOOLEAN        NOT NULL DEFAULT TRUE,
 
     UNIQUE (coworking_id, code)
-);
-
--- -----------------------------------------
--- Брони
--- -----------------------------------------
-CREATE TABLE booking(
-    booking_id   BIGSERIAL  PRIMARY KEY,
-    workspace_id BIGINT     NOT NULL REFERENCES workspace(workspace_id) ON DELETE RESTRICT,
-    user_id      BIGINT     NOT NULL REFERENCES "user"(user_id) ON DELETE RESTRICT,
-    start_time   TIMESTAMPTZ 
- NOT NULL,
-    end_time     TIMESTAMPTZ 
- NOT NULL,
-    status       TEXT       NOT NULL DEFAULT 'pending',
-    created_at   TIMESTAMPTZ 
- DEFAULT now(),
-
-    CHECK (end_time > start_time)
-);
-
--- -----------------------------------------
--- Платежи
--- -----------------------------------------
-CREATE TABLE payment (
-    payment_id  BIGSERIAL      PRIMARY KEY,
-    booking_id  BIGINT         NOT NULL REFERENCES booking(booking_id) ON DELETE RESTRICT,
-    amount      NUMERIC(10, 2) NOT NULL CHECK (amount >= 0),
-    status      TEXT           NOT NULL DEFAULT 'pending',
-    paid_at     TIMESTAMPTZ 
-,
-    refunded_at TIMESTAMPTZ 
 );

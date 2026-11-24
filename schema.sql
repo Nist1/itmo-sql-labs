@@ -93,7 +93,7 @@ CREATE TABLE payment (
     refunded_at TIMESTAMPTZ,
 
     CONSTRAINT payment_amount_check
-        CHECK (amount >= 0),
+        CHECK (amount >= 0)
 );
 
 -- Комментарии к таблицам

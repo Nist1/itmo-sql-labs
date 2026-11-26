@@ -32,5 +32,6 @@ SELECT * FROM workspace;
 -- ============================================================
 -- 4. Негативный тест FK (ОЖИДАЕТСЯ ОШИБКА)
 -- ============================================================
-INSERT INTO booking (workspace_id, user_id, start_time, end_time)
-VALUES (999, 999, '2025-12-01 10:00:00+00', '2025-12-01 12:00:00+00');
+-- Негативный тест FK: ожидается ошибка
+INSERT INTO workspace (coworking_id, type, code, capacity, price_per_hour)
+VALUES (999999, 'desk', 'INVALID-01', 1, 150.00);

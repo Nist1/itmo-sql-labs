@@ -90,6 +90,7 @@ SELECT * FROM payment;
 -- =========================================
 
 -- 1. CHECK: capacity должно быть больше 0
+-- Ожидаемая ошибка: check_violation ограничения workspace_capacity_check
 -- INSERT INTO workspace (
 --     coworking_id, type, code, capacity, price_per_hour
 -- )
@@ -100,6 +101,7 @@ SELECT * FROM payment;
 -- );
 
 -- 2. CHECK: цена не может быть отрицательной
+-- Ожидаемая ошибка: check_violation ограничения workspace_price_check
 -- INSERT INTO workspace (
 --     coworking_id, type, code, capacity, price_per_hour
 -- )
@@ -110,6 +112,7 @@ SELECT * FROM payment;
 -- );
 
 -- 3. CHECK: время окончания должно быть позже начала
+-- Ожидаемая ошибка: check_violation ограничения booking_time_check
 -- INSERT INTO booking (
 --     workspace_id, user_id, start_time, end_time
 -- )
@@ -123,6 +126,7 @@ SELECT * FROM payment;
 -- );
 
 -- 4. EXCLUSION: пересечение бронирований
+-- Ожидаемая ошибка: exclusion_violation
 -- INSERT INTO booking (
 --     workspace_id, user_id, start_time, end_time
 -- )
@@ -136,6 +140,7 @@ SELECT * FROM payment;
 -- );
 
 -- 5. FOREIGN KEY: несуществующий пользователь
+-- Ожидаемая ошибка: foreign_key_violation
 -- INSERT INTO booking (
 --     workspace_id, user_id, start_time, end_time
 -- )
@@ -148,9 +153,12 @@ SELECT * FROM payment;
 -- );
 
 -- 6. UNIQUE: повтор кода рабочего места
+-- Ожидаемая ошибка: duplicate key value violates unique constraint
 -- INSERT INTO workspace (
 --     coworking_id, type, code, capacity, price_per_hour
 -- )
 -- VALUES (
 --     (SELECT coworking_id FROM coworking
---
+--          WHERE name = 'Test Coworking'),
+--     'desk', 'TEST-01', 1, 300.00
+-- );
